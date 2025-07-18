@@ -1,2 +1,2 @@
-1.4.8
-- Se ha recortado la música del tema de Pokémon
+1.4.9
+- Se ha arreglado un problema de visualización de el botón de actualización y los cambios
