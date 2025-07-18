@@ -1,3 +1,2 @@
-1.4.6
-- Se ha vuelto al antiguo sistema de actualizaciones
-- Se han mejorado varios temas
+1.4.7
+- Se ha mejorado la interfaz de las actualizaciones
