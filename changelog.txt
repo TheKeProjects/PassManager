@@ -1,2 +1,2 @@
-1.4.10
-- Se ha arreglado unos problemas visuales
+1.4.11
+- Solucionado un problema con el antivirus
