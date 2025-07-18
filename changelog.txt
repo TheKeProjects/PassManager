@@ -1,2 +1,2 @@
-1.4.7
-- Se ha mejorado la interfaz de las actualizaciones
+1.4.8
+- Se ha recortado la música del tema de Pokémon
