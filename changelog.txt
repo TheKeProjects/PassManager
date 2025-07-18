@@ -1,2 +1,2 @@
-1.4.9
-- Se ha arreglado un problema de visualización de el botón de actualización y los cambios
+1.4.10
+- Se ha arreglado unos problemas visuales
