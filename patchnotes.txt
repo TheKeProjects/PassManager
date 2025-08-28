@@ -1,0 +1,51 @@
+Versión 1.4.11 de PassManager:
+18/7/25
+- Solucionado un problema con el antivirus
+
+Versión 1.4.10 de PassManager:
+18/7/25
+- Se ha arreglado unos problemas visuales
+
+Versión 1.4.9 de PassManager:
+18/7/25
+- Se ha arreglado un problema de visualización de el botón de actualización y los cambios
+
+Versión 1.4.8 de PassManager:
+18/7/25
+- Se ha recortado la música del tema de Pokémon
+
+Versión 1.4.7 de PassManager:
+18/7/25
+- Se ha mejorado la interfaz de las actualizaciones
+
+Versión 1.4.6 de PassManager:
+18/7/25
+- Se ha vuelto al antiguo sistema de actualizaciones y se ha mejorado varios temas
+
+Versión 1.4.5 de PassManager:
+18/7/25
+- Se ha renombrado el archivo de actualización de "PassManager Setup" a "PassManager"
+
+Versión 1.4.4 de PassManager:
+18/7/25
+- Mejorado el sistema de actualizaciones
+
+Versión 1.4.3 de PassManager:
+18/7/25
+- Se ha arreglado un tema que no cargaba
+
+Versión 1.4.2 de PassManager:
+18/7/25
+- Se han arreglado fallos con la actualización automática
+
+Versión 1.4.1 de PassManager:
+18/7/25
+- Actualizacion corrección de errores
+
+Versión 1.4.0 de PassManager:
+18/7/25
+- Actualizacion que incorpora las actualizaciones automaticas
+
+Versión 1.3.9 y Anteriores de PassManager:
+17/7/25
+- Actualizaciones sin mucha relevancia fuera de github
