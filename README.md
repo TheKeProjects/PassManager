@@ -2,7 +2,7 @@
 
 <div align="center">
 
-[![Versión](https://img.shields.io/badge/Versión-1.4.10-success)](https://github.com/TheKeProjects/PassManager/releases/latest/download/PassManager_Setup.exe)
+[![Versión](https://img.shields.io/badge/Versión-1.4.11-success)](https://github.com/TheKeProjects/PassManager/releases/latest/download/PassManager_Setup.exe)
 [![Plataforma](https://img.shields.io/badge/Plataforma-Windows-informational)](https://www.microsoft.com/windows)
 [![Estado](https://img.shields.io/badge/Estado-Activo-brightgreen)](https://github.com/TheKeProjects/PassManager)
 
