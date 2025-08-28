@@ -51,7 +51,7 @@ PassManager/
 
 ## 🛠️ Desarrollo
 
-### Source Code de InaPet 
+### Source Code de Pass Manager
 [AQUI](https://raw.githubusercontent.com/TheKeProjects/PassManager/main/PassManager.zip) Esta el codigo fuente de Pass Manager, para que cualquiera pueda hacer sus cambios y mejorar la app
 
 ### Prerrequisitos
