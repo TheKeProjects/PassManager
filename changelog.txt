@@ -1,3 +1,7 @@
+- Nota para versiones 1.4.11 o inferiores
+- Desisnstala la app, ahora va a ser completamente portable
+- Instala la nueva app en: https://passmanagers.pages.dev/
+
 2.0.0
 - Cambiado todo el codigo a C#
 - Cambios en algunas funciones y mejoras
