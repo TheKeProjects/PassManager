@@ -1,3 +1,8 @@
+Versión 2.0.0 de PassManager:
+04/11/25
+- Cambiado todo el codigo a C#
+- Cambios en algunas funciones y mejoras
+
 Versión 1.4.11 de PassManager:
 18/7/25
 - Solucionado un problema con el antivirus
