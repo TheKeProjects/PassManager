@@ -2,7 +2,7 @@
 
 <div align="center">
 
-[![Versión](https://img.shields.io/badge/Versión-1.4.11-success)](https://github.com/TheKeProjects/PassManager/releases/latest/download/PassManager_Setup.exe)
+[![Versión](https://img.shields.io/badge/Versión-2.0.0-success)](https://github.com/TheKeProjects/PassManager/releases/latest/download/PassManager-v2-0-0.zip)
 [![Plataforma](https://img.shields.io/badge/Plataforma-Windows-informational)](https://www.microsoft.com/windows)
 [![Estado](https://img.shields.io/badge/Estado-Activo-brightgreen)](https://github.com/TheKeProjects/PassManager)
 
@@ -37,35 +37,6 @@ PassManager es un gestor de contraseñas seguro y sencillo que te permite proteg
 | **3. Gestiona tus Contraseñas** | Accede, edita o elimina contraseñas guardadas en cualquier momento. |
 | **4. Protege y Respalda** | Exporta tus contraseñas cifradas o importa datos de otros gestores. |
 
-## 📦 Estructura del proyecto
-
-```
-
-PassManager/
-├── musica/           # Recursos para la app
-│   └── canciones/    # Canciones de los Temas
-├── icon.ico          # Icono de la app
-└── PassManager.py    # Codigo Principal
-
-```
-
-## 🛠️ Desarrollo
-
-### Source Code de Pass Manager
-[AQUI](https://raw.githubusercontent.com/TheKeProjects/PassManager/main/PassManager.zip) Esta el codigo fuente de Pass Manager, para que cualquiera pueda hacer sus cambios y mejorar la app
-
-### Prerrequisitos
-- Python 3.13+
-- Tkinter
-- Pygame
-- PyInstaller
-
-## 🤝 Contribuir
-
-¡Todas las contribuciones son siempre bienvenidas!
-
-Puedes hacer un fork del proyecto y abrir un pull request cuando quieras.
-
 ## 🐛 Reportar problemas
 
 Si encuentras algún problema, por favor [crea un issue](https://github.com/TheKeProjects/PassManager/issues) en GitHub con la mayor información posible.
@@ -74,6 +45,7 @@ Si encuentras algún problema, por favor [crea un issue](https://github.com/TheK
 
 | Versión | Características | Estado |
 | :--- | :--- | :--- |
+| 2.0.0 | Todo el proyecto ha sido mudado a C# | ✅ Estable |
 | 1.4.11 | Solucionado un problema con el antivirus | ✅ Estable |
 | 1.4.10 | Se han arreglado problemas visuales | ✅ Estable |
 | 1.4.9 | Corrección en la visualización del botón de actualización y cambios | ✅ Estable |
