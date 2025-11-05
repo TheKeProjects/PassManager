@@ -1,0 +1,820 @@
+<Window x:Class="PassManager.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="PassManager" Height="600" Width="850"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="CanMinimize"
+        Icon="icon.ico">
+
+    <Window.Resources>
+        <!-- Animations -->
+        <Storyboard x:Key="PointingHandAnimation" RepeatBehavior="Forever" AutoReverse="True">
+            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.Y"
+                           From="0" To="-15" Duration="0:0:0.8">
+                <DoubleAnimation.EasingFunction>
+                    <SineEase EasingMode="EaseInOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+
+        <Storyboard x:Key="LoadingCircleAnimation" RepeatBehavior="Forever">
+            <DoubleAnimation Storyboard.TargetName="LoadingRotation"
+                           Storyboard.TargetProperty="Angle"
+                           From="0" To="360" Duration="0:0:1"
+                           RepeatBehavior="Forever"/>
+        </Storyboard>
+
+        <!-- Button Styles -->
+        <Style x:Key="ModernButton" TargetType="Button">
+            <Setter Property="Background" Value="#FF6B9BD1"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="15,8"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}"
+                                CornerRadius="5"
+                                Padding="{TemplateBinding Padding}"
+                                RenderTransformOrigin="0.5,0.5">
+                            <Border.RenderTransform>
+                                <ScaleTransform ScaleX="1" ScaleY="1"/>
+                            </Border.RenderTransform>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="border"
+                                                           Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                                           To="1.05" Duration="0:0:0.1"/>
+                                            <DoubleAnimation Storyboard.TargetName="border"
+                                                           Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                                           To="1.05" Duration="0:0:0.1"/>
+                                            <DoubleAnimation Storyboard.TargetName="border"
+                                                           Storyboard.TargetProperty="Opacity"
+                                                           To="0.9" Duration="0:0:0.1"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="border"
+                                                           Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                                           To="1" Duration="0:0:0.1"/>
+                                            <DoubleAnimation Storyboard.TargetName="border"
+                                                           Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                                           To="1" Duration="0:0:0.1"/>
+                                            <DoubleAnimation Storyboard.TargetName="border"
+                                                           Storyboard.TargetProperty="Opacity"
+                                                           To="1" Duration="0:0:0.1"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="border"
+                                                           Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                                           To="0.95" Duration="0:0:0.05"/>
+                                            <DoubleAnimation Storyboard.TargetName="border"
+                                                           Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                                           To="0.95" Duration="0:0:0.05"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="border"
+                                                           Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                                           To="1.0" Duration="0:0:0.1"/>
+                                            <DoubleAnimation Storyboard.TargetName="border"
+                                                           Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                                           To="1.0" Duration="0:0:0.1"/>
+                                            <DoubleAnimation Storyboard.TargetName="border"
+                                                           Storyboard.TargetProperty="Opacity"
+                                                           To="1.0" Duration="0:0:0.1"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ListButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="10,10"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid x:Name="MainGrid">
+        <!-- Background will be set in code-behind for theme support -->
+
+        <!-- Login Panel -->
+        <Grid x:Name="LoginPanel" Visibility="Visible">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="350">
+                <TextBlock Text="🔐 PassManager" FontSize="32" FontWeight="Bold"
+                           Foreground="White" HorizontalAlignment="Center" Margin="0,0,0,30"/>
+
+                <TextBlock x:Name="LoginPromptText" Text="Enter Master Password:"
+                           FontSize="16" Foreground="White" Margin="0,0,0,10"
+                           TextWrapping="Wrap" HorizontalAlignment="Center"/>
+
+                <PasswordBox x:Name="MasterPasswordBox" FontSize="14"
+                             Padding="10" Margin="0,0,0,10" Height="40"/>
+
+                <TextBlock x:Name="LoginErrorText" Text="" FontSize="12"
+                           Foreground="#FFFF6B6B" Margin="0,0,0,10" TextWrapping="Wrap"/>
+
+                <Button x:Name="LoginButton" Content="Login" Style="{StaticResource ModernButton}"
+                        Click="LoginButton_Click" Width="150" Margin="0,10,0,0"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Main Application Panel -->
+        <Grid x:Name="MainAppPanel" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Border Grid.Row="0" Background="#AA000000" Padding="15,10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="🔐 PassManager" FontSize="20" FontWeight="Bold"
+                               Foreground="White" VerticalAlignment="Center"/>
+
+                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                        <!-- Themes Control Menu -->
+                        <Grid x:Name="ThemeMenuContainer" Margin="5,0">
+                            <Button x:Name="ThemeMenuButton" Content="🎨 Themes" Style="{StaticResource ModernButton}"
+                                    Click="ThemeMenuButton_Click"/>
+
+                            <Popup x:Name="ThemePopup" PlacementTarget="{Binding ElementName=ThemeMenuButton}"
+                                   Placement="Bottom" StaysOpen="False" AllowsTransparency="True">
+                                <Border Background="#FF2D2D30" BorderBrush="#FF3E3E42"
+                                        BorderThickness="1" CornerRadius="5" Padding="15">
+                                    <StackPanel x:Name="ThemesPanel" Width="200">
+                                        <!-- Theme buttons will be added here dynamically -->
+                                    </StackPanel>
+                                </Border>
+                            </Popup>
+                        </Grid>
+
+                        <!-- Volume Control Menu -->
+                        <Grid x:Name="VolumeMenuContainer" Margin="5,0" Visibility="Collapsed"
+                              MouseEnter="VolumeMenuContainer_MouseEnter"
+                              MouseLeave="VolumeMenuContainer_MouseLeave">
+                            <Button x:Name="VolumeMenuButton" Content="🔊 Volume" Style="{StaticResource ModernButton}">
+                                <Button.ToolTip>
+                                    <ToolTip Content="Hover for 1 second to open"/>
+                                </Button.ToolTip>
+                            </Button>
+
+                            <!-- Loading Circle Animation -->
+                            <Canvas x:Name="LoadingCircle" Width="50" Height="50" Visibility="Collapsed"
+                                    HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,-55">
+                                <Ellipse Width="40" Height="40" Canvas.Left="5" Canvas.Top="5"
+                                         Stroke="#FF6B9BD1" StrokeThickness="4"
+                                         StrokeDashArray="25 10" RenderTransformOrigin="0.5,0.5">
+                                    <Ellipse.RenderTransform>
+                                        <RotateTransform x:Name="LoadingRotation" Angle="0"/>
+                                    </Ellipse.RenderTransform>
+                                </Ellipse>
+                            </Canvas>
+
+                            <Popup x:Name="VolumePopup" PlacementTarget="{Binding ElementName=VolumeMenuButton}"
+                                   Placement="Bottom" StaysOpen="True" AllowsTransparency="True"
+                                   MouseEnter="VolumePopup_MouseEnter"
+                                   MouseLeave="VolumePopup_MouseLeave">
+                                <Border x:Name="PopupBorder" Background="#FF2D2D30" BorderBrush="#FF3E3E42"
+                                        BorderThickness="1" Padding="10" CornerRadius="5"
+                                        RenderTransformOrigin="0.5,0">
+                                    <Border.RenderTransform>
+                                        <ScaleTransform ScaleX="1" ScaleY="0"/>
+                                    </Border.RenderTransform>
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsOpen, ElementName=VolumePopup}" Value="True">
+                                                    <DataTrigger.EnterActions>
+                                                        <BeginStoryboard>
+                                                            <Storyboard>
+                                                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                                                               From="0" To="1" Duration="0:0:0.2">
+                                                                    <DoubleAnimation.EasingFunction>
+                                                                        <CubicEase EasingMode="EaseOut"/>
+                                                                    </DoubleAnimation.EasingFunction>
+                                                                </DoubleAnimation>
+                                                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                                               From="0" To="1" Duration="0:0:0.15"/>
+                                                            </Storyboard>
+                                                        </BeginStoryboard>
+                                                    </DataTrigger.EnterActions>
+                                                    <DataTrigger.ExitActions>
+                                                        <BeginStoryboard>
+                                                            <Storyboard>
+                                                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                                                               To="0" Duration="0:0:0.15">
+                                                                    <DoubleAnimation.EasingFunction>
+                                                                        <CubicEase EasingMode="EaseIn"/>
+                                                                    </DoubleAnimation.EasingFunction>
+                                                                </DoubleAnimation>
+                                                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                                               To="0" Duration="0:0:0.1"/>
+                                                            </Storyboard>
+                                                        </BeginStoryboard>
+                                                    </DataTrigger.ExitActions>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+
+                                    <StackPanel Width="200">
+                                        <Button x:Name="PlayPauseButton" Content="⏸️" Width="60" Height="35"
+                                                Style="{StaticResource ModernButton}" Margin="0,0,0,10"
+                                                Click="PlayPauseButton_Click" HorizontalAlignment="Center"/>
+
+                                        <TextBlock Text="Volume" Foreground="White" FontSize="12" Margin="0,0,0,5"/>
+                                        <Slider x:Name="VolumeSlider" Minimum="0" Maximum="100"
+                                                Value="3" VerticalAlignment="Center"
+                                                ValueChanged="VolumeSlider_ValueChanged" Margin="0,0,0,5"/>
+                                        <TextBlock x:Name="VolumeText" Text="3%" Foreground="White"
+                                                   HorizontalAlignment="Center" FontSize="12"/>
+                                    </StackPanel>
+                                </Border>
+                            </Popup>
+                        </Grid>
+
+                        <Button x:Name="SettingsButton" Content="☁️ Updates" Style="{StaticResource ModernButton}"
+                                Margin="5,0" Click="SettingsButton_Click"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Main Content Area -->
+            <Grid Grid.Row="1" Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="250"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Sections Panel (Left) -->
+                <Border Grid.Column="0" Background="#AA000000" CornerRadius="10" Margin="0,0,5,0" Padding="10">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Text="📁 Sections" FontSize="18" FontWeight="Bold"
+                                   Foreground="White" Margin="5,0,0,10"/>
+
+                        <TextBox x:Name="SectionSearchBox" Grid.Row="1" Height="35" Margin="0,0,0,10"
+                                 FontSize="13" Padding="8,5,8,5" VerticalContentAlignment="Center"
+                                 TextChanged="SectionSearchBox_TextChanged">
+                            <TextBox.Style>
+                                <Style TargetType="TextBox">
+                                    <Setter Property="Background" Value="White"/>
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="TextBox">
+                                                <Border Background="{TemplateBinding Background}"
+                                                        CornerRadius="5" Padding="2" VerticalAlignment="Center">
+                                                    <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center"
+                                                                  Margin="0"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+
+                        <Grid Grid.Row="2">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <StackPanel x:Name="SectionsListPanel"/>
+                            </ScrollViewer>
+
+                            <!-- Tutorial Hint for No Sections -->
+                            <Canvas x:Name="NoSectionsTutorial" Visibility="Collapsed">
+                                <TextBlock Canvas.Left="10" Canvas.Top="20"
+                                           Foreground="White" FontSize="14" FontWeight="SemiBold"
+                                           TextWrapping="Wrap" Width="200">
+                                    <Run Text="👋 Welcome!"/>
+                                    <LineBreak/>
+                                    <Run Text="Start by clicking"/>
+                                    <LineBreak/>
+                                    <Run Text="'➕ Add Section' below"/>
+                                </TextBlock>
+                                <TextBlock x:Name="PointingHandSections" Canvas.Left="90" Canvas.Bottom="80"
+                                           FontSize="40" Text="👇" RenderTransformOrigin="0.5,0.5">
+                                    <TextBlock.RenderTransform>
+                                        <TranslateTransform X="0" Y="0"/>
+                                    </TextBlock.RenderTransform>
+                                </TextBlock>
+                            </Canvas>
+                        </Grid>
+
+                        <StackPanel Grid.Row="3" Margin="0,10,0,0">
+                            <Button x:Name="AddSectionButton" Content="➕ Add Section"
+                                    Style="{StaticResource ListButton}" Click="AddSectionButton_Click"/>
+                            <Button x:Name="ImportButton" Content="📥 Import CSV"
+                                    Style="{StaticResource ListButton}" Click="ImportButton_Click"/>
+                            <Button x:Name="ExportButton" Content="📤 Export CSV"
+                                    Style="{StaticResource ListButton}" Click="ExportButton_Click"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Accounts Panel (Right) -->
+                <Border Grid.Column="1" Background="#AA000000" CornerRadius="10" Margin="5,0,0,0" Padding="10">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0" Margin="5,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Button x:Name="BackButton" Grid.Column="0" Content="⬅️" Width="35" Height="35"
+                                    Style="{StaticResource ModernButton}" Margin="0,0,10,0"
+                                    Visibility="Collapsed" Click="BackButton_Click"
+                                    ToolTip="Back to sections"/>
+
+                            <TextBlock x:Name="AccountsHeaderText" Grid.Column="1" Text="Select a section"
+                                       FontSize="18" FontWeight="Bold" Foreground="White" VerticalAlignment="Center"/>
+                        </Grid>
+
+                        <TextBox x:Name="AccountSearchBox" Grid.Row="1" Height="35" Margin="0,0,0,10"
+                                 FontSize="13" Padding="8,5,8,5" IsEnabled="False" VerticalContentAlignment="Center"
+                                 TextChanged="AccountSearchBox_TextChanged">
+                            <TextBox.Style>
+                                <Style TargetType="TextBox">
+                                    <Setter Property="Background" Value="White"/>
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="TextBox">
+                                                <Border Background="{TemplateBinding Background}"
+                                                        CornerRadius="5" Padding="2" VerticalAlignment="Center">
+                                                    <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center"
+                                                                  Margin="0"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+
+                        <Grid Grid.Row="2">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <StackPanel x:Name="AccountsListPanel"/>
+                            </ScrollViewer>
+
+                            <!-- Tutorial Hint for No Accounts -->
+                            <Canvas x:Name="NoAccountsTutorial" Visibility="Collapsed">
+                                <TextBlock Canvas.Left="20" Canvas.Top="20"
+                                           Foreground="White" FontSize="14" FontWeight="SemiBold"
+                                           TextWrapping="Wrap" Width="280">
+                                    <Run Text="📝 This section is empty!"/>
+                                    <LineBreak/>
+                                    <Run Text="Click '➕ Add Account' below"/>
+                                    <LineBreak/>
+                                    <Run Text="to add your first password"/>
+                                </TextBlock>
+                                <TextBlock x:Name="PointingHandAccounts" Canvas.Left="150" Canvas.Bottom="80"
+                                           FontSize="40" Text="👇" RenderTransformOrigin="0.5,0.5">
+                                    <TextBlock.RenderTransform>
+                                        <TranslateTransform X="0" Y="0"/>
+                                    </TextBlock.RenderTransform>
+                                </TextBlock>
+                            </Canvas>
+                        </Grid>
+
+                        <Button x:Name="AddAccountButton" Grid.Row="3" Content="➕ Add Account"
+                                Style="{StaticResource ModernButton}" Margin="0,10,0,0"
+                                IsEnabled="False" Click="AddAccountButton_Click"/>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <!-- Updates Panel (Exact copy from Sonic Racing structure) -->
+        <Grid x:Name="UpdatesPanel" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Border Grid.Row="0" Background="#AA000000" Padding="15,10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button x:Name="BackFromUpdatesButton" Grid.Column="0" Content="⬅️" Width="40" Height="35"
+                            Style="{StaticResource ModernButton}" Margin="0,0,10,0"
+                            Click="BackFromUpdatesButton_Click"
+                            ToolTip="Back to main app"/>
+
+                    <TextBlock Grid.Column="1" Text="☁️ App Updates" FontSize="20" FontWeight="Bold"
+                               Foreground="White" VerticalAlignment="Center"/>
+                </Grid>
+            </Border>
+
+            <!-- Content Area -->
+            <Grid Grid.Row="1" Margin="20">
+                <!-- Main View (when ShowingInstallationView is False) -->
+                <Grid x:Name="UpdatesMainView" Visibility="Visible">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Header Card -->
+                    <Border Grid.Row="0" Background="#AA000000" CornerRadius="10" Padding="25" Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="App Updates"
+                                     FontSize="24"
+                                     FontWeight="Bold"
+                                     Foreground="White"
+                                     Margin="0,0,0,15"/>
+
+                            <TextBlock Text="Check for updates and download the latest version from GitHub."
+                                     FontSize="14"
+                                     Foreground="White"
+                                     Opacity="0.7"
+                                     TextWrapping="Wrap"
+                                     Margin="0,0,0,10"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Main Content Card -->
+                    <Border Grid.Row="1" Background="#AA000000" CornerRadius="10" Padding="25" Margin="0,10,0,10">
+                        <StackPanel>
+                            <!-- Current Version Banner (clickable) -->
+                            <Border Background="#424242"
+                                   CornerRadius="8"
+                                   Margin="0,0,0,20"
+                                   Cursor="Hand"
+                                   MouseLeftButtonUp="CheckForUpdatesBanner_Click">
+                                <Grid Margin="15">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0"
+                                             Text="ℹ️"
+                                             FontSize="32"
+                                             VerticalAlignment="Center"
+                                             Margin="0,0,15,0"
+                                             Foreground="#2196F3"/>
+
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                        <TextBlock Text="Current Version"
+                                                 FontSize="12"
+                                                 Foreground="White"
+                                                 Opacity="0.7"/>
+                                        <TextBlock FontSize="24"
+                                                 FontWeight="Bold"
+                                                 Foreground="White"
+                                                 Margin="0,5,0,0">
+                                            <Run x:Name="CurrentVersion" Text="v2.0.0"/>
+                                        </TextBlock>
+                                        <TextBlock Text="Click here to check for updates"
+                                                 FontSize="11"
+                                                 Foreground="White"
+                                                 Opacity="0.6"
+                                                 Margin="0,5,0,0"
+                                                 FontStyle="Italic"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+
+                            <!-- Update Status Banner (shows after checking) -->
+                            <Border x:Name="UpdateStatusBorder"
+                                   Background="#4CAF50"
+                                   CornerRadius="8"
+                                   Margin="0,0,0,20"
+                                   Visibility="Collapsed"
+                                   Cursor="Hand"
+                                   MouseLeftButtonUp="UpdateStatusButton_Click">
+                                <Grid Margin="15">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock x:Name="UpdateStatusIcon"
+                                             Grid.Column="0"
+                                             Text="☁️"
+                                             FontSize="32"
+                                             VerticalAlignment="Center"
+                                             Margin="0,0,15,0"
+                                             Foreground="White"/>
+
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                        <TextBlock x:Name="UpdateStatusTitle"
+                                                 FontSize="20"
+                                                 Foreground="White"
+                                                 FontWeight="Bold"
+                                                 Text="Update Available!"/>
+                                        <TextBlock x:Name="UpdateStatusMessage"
+                                                 FontSize="14"
+                                                 Foreground="White"
+                                                 Opacity="0.9"
+                                                 TextWrapping="Wrap"
+                                                 Margin="0,5,0,0"
+                                                 Text="A new version is available for download."/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+
+                            <!-- Update Details (visible when update available) -->
+                            <StackPanel x:Name="UpdateDetailsPanel"
+                                      Visibility="Collapsed"
+                                      Margin="0,0,0,20">
+                                <TextBlock Text="New Version Details"
+                                         FontSize="16"
+                                         FontWeight="Medium"
+                                         Foreground="White"
+                                         Margin="0,0,0,10"/>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0"
+                                             Text="Latest Version:"
+                                             Margin="0,5"
+                                             Foreground="White"
+                                             Opacity="0.7"/>
+                                    <TextBlock x:Name="LatestVersion"
+                                             Grid.Row="0" Grid.Column="1"
+                                             Text="N/A"
+                                             Margin="10,5"
+                                             Foreground="White"
+                                             FontWeight="Medium"/>
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0"
+                                             Text="File Name:"
+                                             Margin="0,5"
+                                             Foreground="White"
+                                             Opacity="0.7"/>
+                                    <TextBlock x:Name="UpdateFileName"
+                                             Grid.Row="1" Grid.Column="1"
+                                             Text="N/A"
+                                             Margin="10,5"
+                                             Foreground="White"
+                                             FontWeight="Medium"/>
+
+                                    <TextBlock Grid.Row="2" Grid.Column="0"
+                                             Text="File Size:"
+                                             Margin="0,5"
+                                             Foreground="White"
+                                             Opacity="0.7"/>
+                                    <TextBlock x:Name="UpdateFileSize"
+                                             Grid.Row="2" Grid.Column="1"
+                                             Text="N/A"
+                                             Margin="10,5"
+                                             Foreground="White"
+                                             FontWeight="Medium"/>
+                                </Grid>
+                            </StackPanel>
+
+                            <!-- Download Progress -->
+                            <StackPanel x:Name="DownloadProgressPanel"
+                                      Visibility="Collapsed"
+                                      Margin="0,0,0,20">
+                                <TextBlock Text="Downloading Update..."
+                                         FontSize="16"
+                                         FontWeight="Medium"
+                                         Foreground="White"
+                                         Margin="0,0,0,10"/>
+                                <ProgressBar x:Name="DownloadProgressBar"
+                                           Height="8"
+                                           Maximum="100"/>
+                                <TextBlock x:Name="DownloadProgressText"
+                                         FontSize="12"
+                                         Foreground="White"
+                                         Opacity="0.7"
+                                         Margin="0,5,0,0"
+                                         HorizontalAlignment="Center"
+                                         Text="0%"/>
+                            </StackPanel>
+
+                            <TextBlock Text="Click the banner above to start the update"
+                                     FontSize="12"
+                                     Foreground="White"
+                                     Opacity="0.7"
+                                     HorizontalAlignment="Center"
+                                     Margin="0,10,0,0"
+                                     x:Name="UpdateHintText"
+                                     Visibility="Collapsed"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <!-- Installation View (when ShowingInstallationView is True) -->
+                <Grid x:Name="UpdatesInstallationView" Visibility="Collapsed">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Installation Header Card -->
+                    <Border Grid.Row="0" Background="#AA000000" CornerRadius="10" Padding="20" Margin="0,0,0,10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0"
+                                     Text="☁️"
+                                     FontSize="48"
+                                     VerticalAlignment="Center"
+                                     Margin="0,0,20,0"
+                                     Foreground="#4CAF50"/>
+
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="Update Available!"
+                                         FontSize="28"
+                                         FontWeight="Bold"
+                                         Foreground="White"
+                                         Margin="0,0,0,10"/>
+                                <TextBlock FontSize="16"
+                                         Foreground="White"
+                                         Opacity="0.8">
+                                    <Run Text="Version"/>
+                                    <Run x:Name="InstallLatestVersion" Text="v0.0.0" FontWeight="Bold"/>
+                                    <Run Text="is ready to install"/>
+                                </TextBlock>
+                                <Grid Margin="0,10,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0"
+                                             Text="File Name:"
+                                             Margin="0,5,10,5"
+                                             Foreground="White"
+                                             Opacity="0.7"/>
+                                    <TextBlock x:Name="InstallUpdateFileName"
+                                             Grid.Row="0" Grid.Column="1"
+                                             Margin="0,5"
+                                             Foreground="White"
+                                             FontWeight="Medium"
+                                             Text="N/A"/>
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0"
+                                             Text="File Size:"
+                                             Margin="0,5,10,5"
+                                             Foreground="White"
+                                             Opacity="0.7"/>
+                                    <TextBlock x:Name="InstallUpdateFileSize"
+                                             Grid.Row="1" Grid.Column="1"
+                                             Margin="0,5"
+                                             Foreground="White"
+                                             FontWeight="Medium"
+                                             Text="N/A"/>
+                                </Grid>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Changelog Card -->
+                    <Border Grid.Row="1" Background="#AA000000" CornerRadius="10" Padding="25" Margin="0,10,0,10">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0"
+                                     Text="What's New:"
+                                     FontSize="20"
+                                     FontWeight="Bold"
+                                     Foreground="White"
+                                     Margin="0,0,0,15"/>
+
+                            <Border Grid.Row="1"
+                                  Background="#424242"
+                                  CornerRadius="8"
+                                  Padding="15">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <TextBlock x:Name="Changelog"
+                                             TextWrapping="Wrap"
+                                             FontFamily="Consolas"
+                                             FontSize="13"
+                                             Foreground="White"
+                                             LineHeight="22"
+                                             Text="Loading changelog..."/>
+                                </ScrollViewer>
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <!-- Action Buttons Card -->
+                    <Border Grid.Row="2" Background="#AA000000" CornerRadius="10" Padding="15" Margin="0,10,0,10">
+                        <StackPanel>
+                            <!-- Download Progress (in installation view) -->
+                            <StackPanel x:Name="InstallDownloadProgressPanel"
+                                      Visibility="Collapsed"
+                                      Margin="0,0,0,10">
+                                <TextBlock FontSize="16"
+                                         FontWeight="Medium"
+                                         Foreground="White"
+                                         Margin="0,0,0,10">
+                                    <Run x:Name="InstallDownloadProgressText" Text="Downloading..."/>
+                                </TextBlock>
+                                <ProgressBar x:Name="InstallDownloadProgressBar"
+                                           Height="8"
+                                           Maximum="100"/>
+                                <TextBlock HorizontalAlignment="Center"
+                                         Margin="0,5,0,0"
+                                         Foreground="White"
+                                         Opacity="0.7">
+                                    <Run x:Name="InstallDownloadProgress" Text="0"/>
+                                    <Run Text="%"/>
+                                </TextBlock>
+                            </StackPanel>
+
+                            <!-- Buttons -->
+                            <StackPanel x:Name="InstallButtonsPanel"
+                                      Orientation="Horizontal"
+                                      HorizontalAlignment="Right">
+                                <Button Content="Cancel"
+                                      Click="CancelInstallation_Click"
+                                      Style="{StaticResource ModernButton}"
+                                      Background="#757575"
+                                      Height="36"
+                                      Margin="0,0,10,0"
+                                      Padding="20,0"/>
+
+                                <Button Click="AcceptInstallation_Click"
+                                      Style="{StaticResource ModernButton}"
+                                      Height="36"
+                                      Padding="20,0"
+                                      Background="#4CAF50">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="📥"
+                                                 FontSize="16"
+                                                 VerticalAlignment="Center"
+                                                 Margin="0,0,8,0"/>
+                                        <TextBlock Text="Download &amp; Install" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
