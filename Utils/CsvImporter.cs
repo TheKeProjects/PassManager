@@ -71,13 +71,20 @@ namespace PassManager.UI
             {
                 try
                 {
-                    // Try to read common CSV formats (Brave, Chrome, etc.)
+                    // Try to read common CSV formats (Brave, Chrome, Python PassManager, etc.)
                     var record = new CsvRecord
                     {
-                        Name = csv.GetField<string>("name") ?? csv.GetField<string>("Name") ?? "",
+                        Section = csv.GetField<string>("Sección") ?? csv.GetField<string>("Section") ?? "",
+                        Name = csv.GetField<string>("De qué es la cuenta") ??
+                               csv.GetField<string>("name") ??
+                               csv.GetField<string>("Name") ?? "",
                         Url = csv.GetField<string>("url") ?? csv.GetField<string>("URL") ?? "",
-                        Username = csv.GetField<string>("username") ?? csv.GetField<string>("Username") ?? "",
-                        Password = csv.GetField<string>("password") ?? csv.GetField<string>("Password") ?? ""
+                        Username = csv.GetField<string>("Email") ??
+                                   csv.GetField<string>("username") ??
+                                   csv.GetField<string>("Username") ?? "",
+                        Password = csv.GetField<string>("Contraseña") ??
+                                   csv.GetField<string>("password") ??
+                                   csv.GetField<string>("Password") ?? ""
                     };
 
                     if (!string.IsNullOrWhiteSpace(record.Password))
@@ -97,27 +104,38 @@ namespace PassManager.UI
 
         private void ImportRecords(List<CsvRecord> records)
         {
-            var importSection = _dataManager.Sections.FirstOrDefault(s => s.Name == "Imported");
-            if (importSection == null)
+            // Group records by section (if section column exists)
+            var recordsBySection = records.GroupBy(r => string.IsNullOrWhiteSpace(r.Section) ? "Imported" : r.Section);
+
+            foreach (var sectionGroup in recordsBySection)
             {
-                _dataManager.AddSection("Imported");
-                importSection = _dataManager.Sections.First(s => s.Name == "Imported");
-            }
+                string sectionName = sectionGroup.Key;
 
-            foreach (var record in records)
-            {
-                string accountType = string.IsNullOrWhiteSpace(record.Name) ? record.Url : record.Name;
-                if (string.IsNullOrWhiteSpace(accountType))
-                    accountType = "Unknown";
+                // Get or create section
+                var section = _dataManager.Sections.FirstOrDefault(s => s.Name == sectionName);
+                if (section == null)
+                {
+                    _dataManager.AddSection(sectionName);
+                    section = _dataManager.Sections.First(s => s.Name == sectionName);
+                }
 
-                string email = string.IsNullOrWhiteSpace(record.Username) ? "No email" : record.Username;
+                // Add accounts to section
+                foreach (var record in sectionGroup)
+                {
+                    string accountType = string.IsNullOrWhiteSpace(record.Name) ? record.Url : record.Name;
+                    if (string.IsNullOrWhiteSpace(accountType))
+                        accountType = "Unknown";
 
-                _dataManager.AddAccount(importSection, accountType, email, record.Password);
+                    string email = string.IsNullOrWhiteSpace(record.Username) ? "No email" : record.Username;
+
+                    _dataManager.AddAccount(section, accountType, email, record.Password);
+                }
             }
         }
 
         private class CsvRecord
         {
+            public string Section { get; set; }
             public string Name { get; set; }
             public string Url { get; set; }
             public string Username { get; set; }

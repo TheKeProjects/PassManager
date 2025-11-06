@@ -40,7 +40,7 @@ namespace PassManager
         private void InitializePaths()
         {
             string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            _appDataPath = Path.Combine(documentsPath, "PassManager", "AppData");
+            _appDataPath = Path.Combine(documentsPath, "PassManager", "PassManager");
 
             _masterKeyPath = Path.Combine(_appDataPath, "master.key");
             _secretKeyPath = Path.Combine(_appDataPath, "secret.key");
@@ -89,7 +89,7 @@ namespace PassManager
             SaveSettings();
 
             // Save version
-            File.WriteAllText(_versionPath, "1.4.12", Encoding.UTF8);
+            File.WriteAllText(_versionPath, "2.0.0", Encoding.UTF8);
         }
 
         /// <summary>
