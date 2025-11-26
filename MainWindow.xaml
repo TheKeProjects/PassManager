@@ -24,6 +24,94 @@
                            RepeatBehavior="Forever"/>
         </Storyboard>
 
+        <!-- Animated Background Storyboard -->
+        <Storyboard x:Key="AnimatedBackgroundStoryboard" RepeatBehavior="Forever">
+            <!-- Blob 1 Animation -->
+            <DoubleAnimation Storyboard.TargetName="Blob1Transform"
+                           Storyboard.TargetProperty="X"
+                           From="0" To="200" Duration="0:0:8"
+                           AutoReverse="True" RepeatBehavior="Forever">
+                <DoubleAnimation.EasingFunction>
+                    <SineEase EasingMode="EaseInOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="Blob1Transform"
+                           Storyboard.TargetProperty="Y"
+                           From="0" To="150" Duration="0:0:10"
+                           AutoReverse="True" RepeatBehavior="Forever">
+                <DoubleAnimation.EasingFunction>
+                    <SineEase EasingMode="EaseInOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+
+            <!-- Blob 2 Animation -->
+            <DoubleAnimation Storyboard.TargetName="Blob2Transform"
+                           Storyboard.TargetProperty="X"
+                           From="0" To="-180" Duration="0:0:12"
+                           AutoReverse="True" RepeatBehavior="Forever">
+                <DoubleAnimation.EasingFunction>
+                    <SineEase EasingMode="EaseInOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="Blob2Transform"
+                           Storyboard.TargetProperty="Y"
+                           From="0" To="120" Duration="0:0:9"
+                           AutoReverse="True" RepeatBehavior="Forever">
+                <DoubleAnimation.EasingFunction>
+                    <SineEase EasingMode="EaseInOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+
+            <!-- Blob 3 Animation -->
+            <DoubleAnimation Storyboard.TargetName="Blob3Transform"
+                           Storyboard.TargetProperty="X"
+                           From="0" To="100" Duration="0:0:11"
+                           AutoReverse="True" RepeatBehavior="Forever">
+                <DoubleAnimation.EasingFunction>
+                    <SineEase EasingMode="EaseInOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="Blob3Transform"
+                           Storyboard.TargetProperty="Y"
+                           From="0" To="-100" Duration="0:0:7"
+                           AutoReverse="True" RepeatBehavior="Forever">
+                <DoubleAnimation.EasingFunction>
+                    <SineEase EasingMode="EaseInOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+
+            <!-- Rotation Animations (like clock hands) -->
+            <!-- Blob 1 Rotation - slow clockwise -->
+            <DoubleAnimation Storyboard.TargetName="Blob1Rotate"
+                           Storyboard.TargetProperty="Angle"
+                           From="0" To="360" Duration="0:0:20"
+                           RepeatBehavior="Forever">
+                <DoubleAnimation.EasingFunction>
+                    <SineEase EasingMode="EaseInOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+
+            <!-- Blob 2 Rotation - medium counter-clockwise -->
+            <DoubleAnimation Storyboard.TargetName="Blob2Rotate"
+                           Storyboard.TargetProperty="Angle"
+                           From="0" To="-360" Duration="0:0:15"
+                           RepeatBehavior="Forever">
+                <DoubleAnimation.EasingFunction>
+                    <SineEase EasingMode="EaseInOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+
+            <!-- Blob 3 Rotation - fast clockwise -->
+            <DoubleAnimation Storyboard.TargetName="Blob3Rotate"
+                           Storyboard.TargetProperty="Angle"
+                           From="0" To="360" Duration="0:0:12"
+                           RepeatBehavior="Forever">
+                <DoubleAnimation.EasingFunction>
+                    <SineEase EasingMode="EaseInOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+
         <!-- Button Styles -->
         <Style x:Key="ModernButton" TargetType="Button">
             <Setter Property="Background" Value="#FF6B9BD1"/>
@@ -122,6 +210,106 @@
 
     <Grid x:Name="MainGrid">
         <!-- Background will be set in code-behind for theme support -->
+
+        <!-- Animated Background Layer with Blur Effect -->
+        <Grid x:Name="AnimatedBackgroundLayer" Panel.ZIndex="-1">
+            <Grid.Effect>
+                <BlurEffect Radius="50" KernelType="Gaussian"/>
+            </Grid.Effect>
+
+            <!-- Moving gradient shapes for liquid glass effect -->
+            <Canvas ClipToBounds="True">
+                <!-- Blob 1 - Multi-wave radial gradient -->
+                <Ellipse x:Name="Blob1" Width="400" Height="400"
+                         Canvas.Left="-100" Canvas.Top="-100"
+                         Opacity="0.5"
+                         RenderTransformOrigin="0.5,0.5">
+                    <Ellipse.Fill>
+                        <RadialGradientBrush GradientOrigin="0.3,0.3" Center="0.5,0.5" RadiusX="0.8" RadiusY="0.8">
+                            <GradientStop Color="#A0FF1744" Offset="0"/>
+                            <GradientStop Color="#00FF1744" Offset="0.15"/>
+                            <GradientStop Color="#A0E91E63" Offset="0.25"/>
+                            <GradientStop Color="#00E91E63" Offset="0.35"/>
+                            <GradientStop Color="#A09C27B0" Offset="0.45"/>
+                            <GradientStop Color="#009C27B0" Offset="0.55"/>
+                            <GradientStop Color="#A0673AB7" Offset="0.65"/>
+                            <GradientStop Color="#00673AB7" Offset="0.75"/>
+                            <GradientStop Color="#A03F51B5" Offset="0.85"/>
+                            <GradientStop Color="#003F51B5" Offset="1"/>
+                        </RadialGradientBrush>
+                    </Ellipse.Fill>
+                    <Ellipse.RenderTransform>
+                        <TransformGroup>
+                            <TranslateTransform x:Name="Blob1Transform" X="0" Y="0"/>
+                            <RotateTransform x:Name="Blob1Rotate" Angle="0"/>
+                        </TransformGroup>
+                    </Ellipse.RenderTransform>
+                </Ellipse>
+
+                <!-- Blob 2 - Multi-wave radial gradient -->
+                <Ellipse x:Name="Blob2" Width="350" Height="350"
+                         Canvas.Right="-50" Canvas.Top="100"
+                         Opacity="0.45"
+                         RenderTransformOrigin="0.5,0.5">
+                    <Ellipse.Fill>
+                        <RadialGradientBrush GradientOrigin="0.7,0.3" Center="0.5,0.5" RadiusX="0.75" RadiusY="0.75">
+                            <GradientStop Color="#A000BCD4" Offset="0"/>
+                            <GradientStop Color="#0000BCD4" Offset="0.18"/>
+                            <GradientStop Color="#A000ACC1" Offset="0.3"/>
+                            <GradientStop Color="#0000ACC1" Offset="0.42"/>
+                            <GradientStop Color="#A0009688" Offset="0.54"/>
+                            <GradientStop Color="#00009688" Offset="0.66"/>
+                            <GradientStop Color="#A0004D40" Offset="0.78"/>
+                            <GradientStop Color="#00004D40" Offset="1"/>
+                        </RadialGradientBrush>
+                    </Ellipse.Fill>
+                    <Ellipse.RenderTransform>
+                        <TransformGroup>
+                            <TranslateTransform x:Name="Blob2Transform" X="0" Y="0"/>
+                            <RotateTransform x:Name="Blob2Rotate" Angle="0"/>
+                        </TransformGroup>
+                    </Ellipse.RenderTransform>
+                </Ellipse>
+
+                <!-- Blob 3 - Multi-wave radial gradient -->
+                <Ellipse x:Name="Blob3" Width="300" Height="300"
+                         Canvas.Left="200" Canvas.Bottom="-80"
+                         Opacity="0.4"
+                         RenderTransformOrigin="0.5,0.5">
+                    <Ellipse.Fill>
+                        <RadialGradientBrush GradientOrigin="0.6,0.6" Center="0.5,0.5" RadiusX="0.7" RadiusY="0.7">
+                            <GradientStop Color="#A0FFC107" Offset="0"/>
+                            <GradientStop Color="#00FFC107" Offset="0.2"/>
+                            <GradientStop Color="#A0FF9800" Offset="0.35"/>
+                            <GradientStop Color="#00FF9800" Offset="0.5"/>
+                            <GradientStop Color="#A0FF5722" Offset="0.65"/>
+                            <GradientStop Color="#00FF5722" Offset="0.8"/>
+                            <GradientStop Color="#A0E64A19" Offset="0.9"/>
+                            <GradientStop Color="#00E64A19" Offset="1"/>
+                        </RadialGradientBrush>
+                    </Ellipse.Fill>
+                    <Ellipse.RenderTransform>
+                        <TransformGroup>
+                            <TranslateTransform x:Name="Blob3Transform" X="0" Y="0"/>
+                            <RotateTransform x:Name="Blob3Rotate" Angle="0"/>
+                        </TransformGroup>
+                    </Ellipse.RenderTransform>
+                </Ellipse>
+            </Canvas>
+        </Grid>
+
+        <!-- Static Blur Overlay (for non-animated mode) -->
+        <Rectangle x:Name="StaticBlurOverlay" Panel.ZIndex="-1" Opacity="0.15">
+            <Rectangle.Fill>
+                <RadialGradientBrush>
+                    <GradientStop Color="#FFFFFF" Offset="0"/>
+                    <GradientStop Color="#00FFFFFF" Offset="1"/>
+                </RadialGradientBrush>
+            </Rectangle.Fill>
+            <Rectangle.Effect>
+                <BlurEffect Radius="80" KernelType="Gaussian"/>
+            </Rectangle.Effect>
+        </Rectangle>
 
         <!-- Login Panel -->
         <Grid x:Name="LoginPanel" Visibility="Visible">

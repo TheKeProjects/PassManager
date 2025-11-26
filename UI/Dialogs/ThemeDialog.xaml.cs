@@ -21,6 +21,7 @@ namespace PassManager.UI
             _settings = settings;
 
             MusicEnabledCheckBox.IsChecked = _settings.MusicEnabled;
+            AnimatedBackgroundCheckBox.IsChecked = _settings.AnimatedBackground;
 
             LoadThemes();
         }
@@ -96,6 +97,15 @@ namespace PassManager.UI
             {
                 _audioManager.Stop();
             }
+        }
+
+        private void AnimatedBackgroundCheckBox_Changed(object sender, RoutedEventArgs e)
+        {
+            _settings.AnimatedBackground = AnimatedBackgroundCheckBox.IsChecked == true;
+            DataManager.Instance.SaveSettings();
+
+            // Trigger animation update in MainWindow
+            _themeManager.ApplyTheme(_settings.Theme);
         }
     }
 }

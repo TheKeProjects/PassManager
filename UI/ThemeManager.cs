@@ -154,6 +154,13 @@ namespace PassManager.UI
                     new SolidColorBrush(theme.ButtonColor)));
                 _window.Resources["ModernButton"] = newStyle;
             }
+
+            // Update animated background if this is the MainWindow
+            var mainWindow = _window as MainWindow;
+            if (mainWindow != null)
+            {
+                mainWindow.UpdateAnimatedBackground();
+            }
         }
 
         public Dictionary<string, ThemeData> GetThemes()

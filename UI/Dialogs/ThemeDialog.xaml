@@ -26,6 +26,9 @@
             <CheckBox x:Name="MusicEnabledCheckBox" Content="Enable Theme Music"
                       FontSize="13" Checked="MusicEnabledCheckBox_Changed"
                       Unchecked="MusicEnabledCheckBox_Changed"/>
+            <CheckBox x:Name="AnimatedBackgroundCheckBox" Content="Animated Background"
+                      FontSize="13" Margin="0,10,0,0" Checked="AnimatedBackgroundCheckBox_Changed"
+                      Unchecked="AnimatedBackgroundCheckBox_Changed"/>
         </StackPanel>
 
         <Button Grid.Row="3" Content="Close" Width="100" Height="35"

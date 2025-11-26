@@ -46,6 +46,9 @@ namespace PassManager
             // Apply default theme
             _themeManager.ApplyTheme("default");
 
+            // Apply animated background setting
+            UpdateAnimatedBackground();
+
             // Check if first time setup
             if (!_dataManager.MasterPasswordExists())
             {
@@ -125,6 +128,9 @@ namespace PassManager
             // Apply saved theme
             _themeManager.ApplyTheme(_dataManager.Settings.Theme);
 
+            // Apply animated background setting
+            UpdateAnimatedBackground();
+
             // Initialize audio and show volume menu only for themes with music
             UpdateVolumeMenuVisibility();
 
@@ -159,6 +165,36 @@ namespace PassManager
                 {
                     PlayPauseButton.Content = "▶️"; // Play icon
                 }
+            }
+        }
+
+        public void UpdateAnimatedBackground()
+        {
+            bool isAnimated = _dataManager.Settings.AnimatedBackground;
+
+            if (isAnimated)
+            {
+                // Show animated background layer
+                AnimatedBackgroundLayer.Visibility = Visibility.Visible;
+                StaticBlurOverlay.Visibility = Visibility.Collapsed;
+
+                // Start the animation
+                var storyboard = (Storyboard)this.FindResource("AnimatedBackgroundStoryboard");
+                storyboard.Begin();
+            }
+            else
+            {
+                // Hide animated background, show static blur
+                AnimatedBackgroundLayer.Visibility = Visibility.Collapsed;
+                StaticBlurOverlay.Visibility = Visibility.Visible;
+
+                // Stop the animation if running
+                try
+                {
+                    var storyboard = (Storyboard)this.FindResource("AnimatedBackgroundStoryboard");
+                    storyboard.Stop();
+                }
+                catch { }
             }
         }
 

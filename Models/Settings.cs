@@ -6,6 +6,7 @@ namespace PassManager.Models
         public bool MusicEnabled { get; set; } = true;
         public int Volume { get; set; } = 3;
         public bool MusicPlaying { get; set; } = true;
+        public bool AnimatedBackground { get; set; } = true;
 
         public Settings()
         {
