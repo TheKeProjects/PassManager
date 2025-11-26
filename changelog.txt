@@ -1,9 +1,11 @@
-2.0.0
+2.0.1
+- (AVISO PARA VERSIONES INFERIORES A 2.0.0)
 - ATENCION!!!! EXPORTA ANTES TUS DATOS EN CSV CON 
 - EL SIMBOLO DE UNA CAJA CON UNA FLECHA Y LUEGO IMPORTALOS
 - DE LO CONTRARIO PERDERAS TODAS TUS CUENTAS!!!
 
 - -------------------------------------------
 
-- Cambiado todo el codigo a C#
-- Cambios en algunas funciones y mejoras
+- Algunos temas han sido mejorados
+- Se ha mejorado el sistema de actualiaciones
+- Se ha agregado una pantalla de carga al abrir por primera vez
