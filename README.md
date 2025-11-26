@@ -2,7 +2,7 @@
 
 <div align="center">
 
-[![Versión](https://img.shields.io/badge/Versión-2.0.0-success)](https://github.com/TheKeProjects/PassManager/releases/latest/download/PassManager-v2-0-0.zip)
+[![Versión](https://img.shields.io/badge/Versión-2.0.1-success)](https://github.com/TheKeProjects/PassManager/releases/latest/download/PassManager-v2-0-0.zip)
 [![Plataforma](https://img.shields.io/badge/Plataforma-Windows-informational)](https://www.microsoft.com/windows)
 [![Estado](https://img.shields.io/badge/Estado-Activo-brightgreen)](https://github.com/TheKeProjects/PassManager)
 
@@ -45,6 +45,7 @@ Si encuentras algún problema, por favor [crea un issue](https://github.com/TheK
 
 | Versión | Características | Estado |
 | :--- | :--- | :--- |
+| 2.0.1 | Optimizaciones y Mejoras en Temas Implementados | ✅ Estable |
 | 2.0.0 | Todo el proyecto ha sido mudado a C# | ✅ Estable |
 | 1.4.11 | Solucionado un problema con el antivirus | ✅ Estable |
 | 1.4.10 | Se han arreglado problemas visuales | ✅ Estable |
