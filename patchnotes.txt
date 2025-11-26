@@ -1,3 +1,9 @@
+Versión 2.0.1 de PassManager:
+26/11/25
+- Algunos temas han sido mejorados
+- Se ha mejorado el sistema de actualiaciones
+- Se ha agregado una pantalla de carga al abrir por primera vez
+
 Versión 2.0.0 de PassManager:
 04/11/25
 - Cambiado todo el codigo a C#
